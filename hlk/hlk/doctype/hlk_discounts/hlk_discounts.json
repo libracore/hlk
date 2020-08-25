@@ -1,0 +1,37 @@
+{
+ "creation": "2020-05-27 12:40:26.814402",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "description",
+  "discount"
+ ],
+ "fields": [
+  {
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Description",
+   "reqd": 1
+  },
+  {
+   "fieldname": "discount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Discount",
+   "reqd": 1
+  }
+ ],
+ "istable": 1,
+ "modified": "2020-08-25 12:38:08.533367",
+ "modified_by": "Administrator",
+ "module": "HLK",
+ "name": "HLK Discounts",
+ "owner": "joel.mesmer@libracore.com",
+ "permissions": [],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

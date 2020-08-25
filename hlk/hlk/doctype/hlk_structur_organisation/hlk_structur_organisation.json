@@ -1,0 +1,79 @@
+{
+ "creation": "2020-07-08 09:15:35.875966",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "main_element",
+  "parent_element",
+  "total",
+  "discounting",
+  "discount_in_percent",
+  "show_discount",
+  "page_break"
+ ],
+ "fields": [
+  {
+   "fieldname": "main_element",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Element",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "element.eltern_element",
+   "fetch_if_empty": 1,
+   "fieldname": "parent_element",
+   "fieldtype": "Link",
+   "label": "Parent Element",
+   "options": "Item"
+  },
+  {
+   "fieldname": "total",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Total",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "discounting",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Discounting"
+  },
+  {
+   "depends_on": "eval:doc.discounting",
+   "fieldname": "discount_in_percent",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Discount in Percent"
+  },
+  {
+   "default": "1",
+   "depends_on": "eval:doc.discounting",
+   "fieldname": "show_discount",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Show Discount"
+  },
+  {
+   "default": "0",
+   "fieldname": "page_break",
+   "fieldtype": "Check",
+   "label": "Seitenumbruch"
+  }
+ ],
+ "istable": 1,
+ "modified": "2020-08-25 12:33:35.303348",
+ "modified_by": "Administrator",
+ "module": "HLK",
+ "name": "HLK Structur Organisation",
+ "owner": "joel.mesmer@libracore.com",
+ "permissions": [],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}
