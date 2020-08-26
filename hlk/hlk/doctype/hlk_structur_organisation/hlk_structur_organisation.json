@@ -7,6 +7,8 @@
   "main_element",
   "parent_element",
   "total",
+  "net_total",
+  "charged",
   "discounting",
   "discount_in_percent",
   "show_discount",
@@ -63,10 +65,22 @@
    "fieldname": "page_break",
    "fieldtype": "Check",
    "label": "Seitenumbruch"
+  },
+  {
+   "fieldname": "net_total",
+   "fieldtype": "Currency",
+   "label": "Net total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "charged",
+   "fieldtype": "Percent",
+   "label": "Charged",
+   "read_only": 1
   }
  ],
  "istable": 1,
- "modified": "2020-08-25 12:33:35.303348",
+ "modified": "2020-08-26 10:47:44.646935",
  "modified_by": "Administrator",
  "module": "HLK",
  "name": "HLK Structur Organisation",

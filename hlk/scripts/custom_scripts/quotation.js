@@ -14,11 +14,8 @@ frappe.ui.form.on('Quotation', {
 		
 		calc_valid_to_date(frm);
 		
-		var hlk_element_allocation = check_hlk_element_allocation(frm);
-		if (hlk_element_allocation != '') {
-			frappe.msgprint( __("Zuweisungen Strukturelemente unvollständig, prüfen Sie folgende Artikelpositionen:") + hlk_element_allocation, __("Validation") );
-			frappe.validated=false;
-		}
+		validate_hlk_element_allocation(frm);
+		
 	},
 	refresh(frm) {
 		frm.fields_dict['hlk_structur_organisation'].grid.get_field('main_element').get_query = function(doc, cdt, cdn) {
@@ -28,6 +25,7 @@ frappe.ui.form.on('Quotation', {
 				]
 			}
 		};
+		
 		frm.fields_dict['hlk_structur_organisation'].grid.get_field('parent_element').get_query = function(doc, cdt, cdn) {
 			return {    
 				filters:[
@@ -35,6 +33,7 @@ frappe.ui.form.on('Quotation', {
 				]
 			}
 		};
+		
 		frm.fields_dict['items'].grid.get_field('strukturelement').get_query = function(doc, cdt, cdn) {
 			return {    
 				filters:[
@@ -42,10 +41,12 @@ frappe.ui.form.on('Quotation', {
 				]
 			}
 		};
-		frm.add_custom_button(__("Change Customer w/o impact on price"), function() {
-            change_customer(frm);
-        });
+		
 		if (!frm.doc.__islocal) {
+			frm.add_custom_button(__("Change Customer w/o impact on price"), function() {
+				change_customer(frm);
+			});
+			
 			frm.add_custom_button(__("Transfer Discounts"), function() {
 				if (cur_frm.is_dirty()) {
 					frappe.msgprint(__("Please save Document first."));
@@ -53,6 +54,7 @@ frappe.ui.form.on('Quotation', {
 					transfer_structur_organisation_discounts(frm);
 				}
 			}, __("HLK Tools"));
+			
 			frm.add_custom_button(__("Calc Totals"), function() {
 				if (cur_frm.is_dirty()) {
 					frappe.msgprint(__("Please save Document first."));
@@ -63,6 +65,22 @@ frappe.ui.form.on('Quotation', {
 		}
 	}
 })
+
+function validate_hlk_element_allocation(frm) {
+	frappe.call({
+		"method": "hlk.utils.validate_hlk_element_allocation",
+		"async": false,
+		"callback": function(response) {
+			if (response.message == 'validate') {
+				var hlk_element_allocation = check_hlk_element_allocation(frm);
+				if (hlk_element_allocation != '') {
+					frappe.msgprint( __("Zuweisungen Strukturelemente unvollständig, prüfen Sie folgende Artikelpositionen:") + hlk_element_allocation, __("Validation") );
+					frappe.validated=false;
+				}
+			}
+		}
+	});
+}
 
 function calc_structur_organisation_totals(frm) {
 	if (!frm.doc.__islocal) {
@@ -108,10 +126,18 @@ function check_hlk_element_allocation(frm) {
 }
 
 function calc_valid_to_date(frm) {
-	var start = cur_frm.doc.transaction_date;
-	var months = 3;
-	var new_valid_date = frappe.datetime.add_months(start, months);
-	cur_frm.set_value('valid_till', new_valid_date);
+	frappe.call({
+		"method": "hlk.utils.check_calc_valid_to_date",
+		"async": false,
+		"callback": function(response) {
+			if (response.message != 'deactivated') {
+				var start = cur_frm.doc.transaction_date;
+				var months = parseInt(response.message);
+				var new_valid_date = frappe.datetime.add_months(start, months);
+				cur_frm.set_value('valid_till', new_valid_date);
+			}
+		}
+	});
 }
 
 function change_customer(frm) {
