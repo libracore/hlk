@@ -1,4 +1,4 @@
-frappe.ui.form.on('Quotation', {
+frappe.ui.form.on('Sales Order', {
 	validate(frm) {
 		if (cur_frm.doc.special_discounts) {
 		    var discounts = cur_frm.doc.special_discounts;
@@ -12,10 +12,7 @@ frappe.ui.form.on('Quotation', {
 			cur_frm.set_value('discount_amount', total_discounts);
 		}
 		
-		calc_valid_to_date(frm);
-		
 		validate_hlk_element_allocation(frm);
-		
 	},
 	refresh(frm) {
 		frm.fields_dict['hlk_structur_organisation'].grid.get_field('main_element').get_query = function(doc, cdt, cdn) {
@@ -63,8 +60,99 @@ frappe.ui.form.on('Quotation', {
 				}
 			}, __("HLK Tools"));
 		}
+		
+		if (!frm.doc.__islocal && cur_frm.doc.docstatus == '1') {
+			frm.add_custom_button(__("Teilrechnung"), function() {
+				if (cur_frm.is_dirty()) {
+					frappe.msgprint(__("Please save Document first."));
+				} else {
+					erstelle_teilrechnung_pop_up(frm);
+				}
+			}, __("Create"));
+		}
+		
+		frappe.call({
+			"method": "hlk.utils.check_for_changed_line_items",
+			"args": {
+				"record": frm.doc.name
+			},
+			"async": false,
+			"callback": function(response) {
+				if (response.message == 'changed') {
+					cur_frm.reload_doc();
+				}
+			}
+		});
 	}
 })
+
+function erstelle_teilrechnung_pop_up(frm) {
+	var struktur_elemente = get_all_strukturelemente(frm);
+	var fields = [];
+	struktur_elemente.forEach(function(entry) {
+		var charged = 100;
+		var hlk_structur_organisation = cur_frm.doc.hlk_structur_organisation;
+		hlk_structur_organisation.forEach(function(y) {
+			if (y.main_element == entry) {
+				charged = y.charged;
+			}
+		});
+		if (charged < 100) {
+			fields.push({
+				'fieldname': entry,
+				'fieldtype': 'Percent',
+				'label': 'Arbeitsfortschritt in % von ' + entry,
+				'default': '0.00',
+				'reqd': 1,
+				'description': 'Bereits verrechneter Arbeitsfortschritt: ' + String(charged) + '%'
+			});
+		}
+	});
+	if (!fields.length > 0) {
+		frappe.msgprint("Es wurden alle Positionen zu 100% verrechnet");
+		
+	} else {
+		frappe.prompt(
+		fields,
+		function(values){
+			for (const [key, value] of Object.entries(values)) {
+				frappe.call({
+					"method": "hlk.utils.set_amount_to_bill",
+					"args": {
+						"record": frm.doc.name,
+						'element': key,
+						'value': value
+					},
+					"async": false
+				});
+			}
+			erstelle_teilrechnung(frm);
+		},
+		'Erstellung Teilrechnung',
+		'Erstellen'
+		)	
+	}
+}
+
+function get_all_strukturelemente(frm) {
+	var struktur_elemente = [];
+	var items = cur_frm.doc.items;
+	items.forEach(function(entry) {
+		if ((entry.qty > 0)&&(entry.hlk_element)) {
+			if(struktur_elemente.indexOf(entry.hlk_element) === -1) {
+				struktur_elemente.push(entry.hlk_element);
+			}
+		}
+	});
+	return struktur_elemente;
+}
+
+function erstelle_teilrechnung(frm) {
+	frappe.model.open_mapped_doc({
+		"method": "hlk.utils.make_sales_invoice",
+		"frm": cur_frm
+	})
+}
 
 function validate_hlk_element_allocation(frm) {
 	frappe.call({
@@ -87,7 +175,7 @@ function calc_structur_organisation_totals(frm) {
 		frappe.call({
 			"method": "hlk.utils.calc_structur_organisation_totals",
 			"args": {
-				"dt": "Quotation",
+				"dt": "Sales Order",
 				"dn": frm.doc.name
 			},
 			"async": false,
@@ -103,7 +191,7 @@ function transfer_structur_organisation_discounts(frm) {
 		frappe.call({
 			"method": "hlk.utils.transfer_structur_organisation_discounts",
 			"args": {
-				"dt": "Quotation",
+				"dt": "Sales Order",
 				"dn": frm.doc.name
 			},
 			"async": false,
@@ -148,7 +236,7 @@ function change_customer(frm) {
 	],
 	function(values){
 		var args = {
-			'dt': 'Quotation',
+			'dt': 'Sales Order',
 			'record': cur_frm.doc.name,
 			'customer': values.customer
 		}
