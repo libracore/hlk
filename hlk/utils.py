@@ -272,3 +272,7 @@ def set_amount_to_bill(record, element, value):
 			to_bill_now = ((flt(item.amount) / flt(100)) * flt(value)) - flt(already_billed)
 			item.amount_to_bill_now = to_bill_now
 	document.save()
+	
+@frappe.whitelist()
+def get_item_group_for_structur_element_filter():
+	return frappe.db.get_single_value('HLK Settings', 'structur_element_filter')

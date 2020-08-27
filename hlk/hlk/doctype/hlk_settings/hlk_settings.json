@@ -4,8 +4,10 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "section_quotation",
+  "section_general",
   "validate_hlk_element_allocation",
+  "structur_element_filter",
+  "section_quotation",
   "activate_automatic_validity_calculation",
   "default_validity_in_months"
  ],
@@ -32,10 +34,23 @@
    "fieldname": "validate_hlk_element_allocation",
    "fieldtype": "Check",
    "label": "Validate HLK Element Allocation"
+  },
+  {
+   "fieldname": "section_general",
+   "fieldtype": "Section Break",
+   "label": "General"
+  },
+  {
+   "fieldname": "structur_element_filter",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item Group For Structur Element Filter",
+   "options": "Item Group",
+   "reqd": 1
   }
  ],
  "issingle": 1,
- "modified": "2020-08-26 09:38:04.991482",
+ "modified": "2020-08-27 15:42:08.015446",
  "modified_by": "Administrator",
  "module": "HLK",
  "name": "HLK Settings",

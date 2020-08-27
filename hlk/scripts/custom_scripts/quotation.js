@@ -18,29 +18,36 @@ frappe.ui.form.on('Quotation', {
 		
 	},
 	refresh(frm) {
-		frm.fields_dict['hlk_structur_organisation'].grid.get_field('main_element').get_query = function(doc, cdt, cdn) {
-			return {    
-				filters:[
-					['item_group', 'IN', ["Strukturelement", "Total-Element"]]
-				]
+		frappe.call({
+			"method": "hlk.utils.get_item_group_for_structur_element_filter",
+			"async": false,
+			"callback": function(response) {
+				var item_group_for_structur_element_filter = response.message;
+				frm.fields_dict['hlk_structur_organisation'].grid.get_field('main_element').get_query = function(doc, cdt, cdn) {
+					return {    
+						filters:[
+							['item_group', '=', item_group_for_structur_element_filter]
+						]
+					}
+				};
+				
+				frm.fields_dict['hlk_structur_organisation'].grid.get_field('parent_element').get_query = function(doc, cdt, cdn) {
+					return {    
+						filters:[
+							['item_group', '=', item_group_for_structur_element_filter]
+						]
+					}
+				};
+				
+				frm.fields_dict['items'].grid.get_field('hlk_element').get_query = function(doc, cdt, cdn) {
+					return {    
+						filters:[
+							['item_group', '=', item_group_for_structur_element_filter]
+						]
+					}
+				};
 			}
-		};
-		
-		frm.fields_dict['hlk_structur_organisation'].grid.get_field('parent_element').get_query = function(doc, cdt, cdn) {
-			return {    
-				filters:[
-					['item_group', 'IN', ["Strukturelement", "Total-Element"]]
-				]
-			}
-		};
-		
-		frm.fields_dict['items'].grid.get_field('strukturelement').get_query = function(doc, cdt, cdn) {
-			return {    
-				filters:[
-					['item_group', '=', "Strukturelement"]
-				]
-			}
-		};
+		});
 		
 		cur_frm.fields_dict['introduction_template'].get_query = function(doc) {
 			 return {
