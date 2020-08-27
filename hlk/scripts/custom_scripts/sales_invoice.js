@@ -1,4 +1,4 @@
-frappe.ui.form.on('Sales Order', {
+frappe.ui.form.on('Sales Invoice', {
 	validate(frm) {
 		if (cur_frm.doc.special_discounts) {
 		    var discounts = cur_frm.doc.special_discounts;
@@ -37,6 +37,24 @@ frappe.ui.form.on('Sales Order', {
 					['item_group', '=', "Strukturelement"]
 				]
 			}
+		};
+		
+		cur_frm.fields_dict['introduction_template'].get_query = function(doc) {
+			 return {
+				 filters: {
+					 "sales_invoice": 1,
+					 "introduction": 1
+				 }
+			 }
+		};
+		
+		cur_frm.fields_dict['closing_text_template'].get_query = function(doc) {
+			 return {
+				 filters: {
+					 "sales_invoice": 1,
+					 "closing_text": 1
+				 }
+			 }
 		};
 		
 		if (!frm.doc.__islocal && cur_frm.doc.docstatus != '1') {

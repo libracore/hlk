@@ -12,6 +12,12 @@ def get_data():
 					"name": "HLK Settings",
 					"label": _("HLK Settings"),
 					"description": _("HLK Settings")
+				},
+				{
+					"type": "doctype",
+					"name": "HLK Text Template",
+					"label": _("HLK Text Template"),
+					"description": _("HLK Text Template")
 				}
 			]
 		}

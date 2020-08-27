@@ -39,6 +39,24 @@ frappe.ui.form.on('Sales Order', {
 			}
 		};
 		
+		cur_frm.fields_dict['introduction_template'].get_query = function(doc) {
+			 return {
+				 filters: {
+					 "sales_order": 1,
+					 "introduction": 1
+				 }
+			 }
+		};
+		
+		cur_frm.fields_dict['closing_text_template'].get_query = function(doc) {
+			 return {
+				 filters: {
+					 "sales_order": 1,
+					 "closing_text": 1
+				 }
+			 }
+		};
+		
 		if (!frm.doc.__islocal && cur_frm.doc.docstatus != '1') {
 			frm.add_custom_button(__("Change Customer w/o impact on price"), function() {
 				change_customer(frm);
