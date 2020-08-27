@@ -20,5 +20,21 @@ def get_data():
 					"description": _("HLK Text Template")
 				}
 			]
+		},
+		{
+			"label": _("Integrations"),
+			"icon": "fa fa-cogs",
+			"items": [
+				{
+					"type": "page",
+					"name": "bkp-importer",
+					"label": _("BKP Importer"),
+					"description": _("BKP Importer")                   
+				}
+			]
 		}
 	]
+
+	
+	
+	
