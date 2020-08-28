@@ -104,6 +104,9 @@ frappe.ui.form.on('Quotation', {
 						}
 					}
 				});
+			} else {
+				cur_frm.set_value('hlk_structur_organisation_template', '');
+				frappe.msgprint(__("Please remove table HLK Structur Organisation first"));
 			}
 		}
 	}
