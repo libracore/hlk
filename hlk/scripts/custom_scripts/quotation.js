@@ -74,7 +74,7 @@ frappe.ui.form.on('Quotation', {
 			
 			frm.add_custom_button(__("Transfer Discounts"), function() {
 				if (cur_frm.is_dirty()) {
-					frappe.msgprint(__("Please save Document first."));
+					frappe.msgprint(__("Please save Document first"));
 				} else {
 					transfer_structur_organisation_discounts(frm);
 				}
@@ -82,7 +82,7 @@ frappe.ui.form.on('Quotation', {
 			
 			frm.add_custom_button(__("Calc Totals"), function() {
 				if (cur_frm.is_dirty()) {
-					frappe.msgprint(__("Please save Document first."));
+					frappe.msgprint(__("Please save Document first"));
 				} else {
 					calc_structur_organisation_totals(frm);
 				}

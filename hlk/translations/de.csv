@@ -1,0 +1,49 @@
+Module: HLK,HLK Settings,HLK Einstellungen
+Module: HLK,HLK Text Template,HLK Text Vorlagen
+Module: HLK,HLK Structur Organisation Template,HLK Struktur Organisations Vorlagen
+DocType: HLK Settings,Validate HLK Element Allocation,Validierung der HLK Elementen Zuordnung
+DocType: HLK Settings,Item Group For Structur Element Filter,Artikelgruppe für Struktur-Elementen Filter
+DocType: HLK Settings,Activate Automatic Validity Calculation,Aktiviere automatische Berechnung der Angebotsdültigkeit
+DocType: HLK Settings,Default Validity In Months,Standard Gültigkeit in Monaten
+DocType: HLK Text Template,Introduction,Einleitung
+DocType: HLK Text Template,Closing Text,Abschlusstext
+DocType: HLK Structur Organisation Template,HLK Structur Organisation,HLK Struktur Organisation
+DocType: Quotation,Introduction Template,Einleitungs Vorlage
+DocType: Quotation,Deactivate Page Break,Deaktiviere Seitenumbruch
+DocType: Quotation,Transfer Discounts,Rabatte Übertragen
+DocType: Quotation,Change Customer without impact on price,Ändere Kunde ohne Effekt auf Preis
+DocType: Quotation,Calc Totals,Totale berechnen
+DocType: Quotation,Please save Document first,Bitte speichern Sie das Dokument zuerst
+DocType: Quotation,Please remove table HLK Structur Organisation first,Bitte entfernen Sie zuerst die Tabelle HLK Struktur Organisation
+DocType: Quotation,Closing Text Template,Abschlusstext Vorlage
+DocType: Quotation,Special Discounts,Spezialrabatte
+DocType: HLK Structur Organisation,Parent Element,Eltern Element
+DocType: HLK Structur Organisation,Charged,Verrechnet
+DocType: HLK Structur Organisation,Discounting,Rabattierung
+DocType: HLK Structur Organisation,Show Total After This Position,Zeige Total nach dieser Position
+DocType: HLK Structur Organisation,Show Main Total After This Position,Zeige Gesamttotal nach dieser Position
+DocType: HLK Structur Organisation,Discount in Percent,Rabatt in Prozent
+DocType: HLK Structur Organisation,Show Discount,Zeige Rabatt an
+DocType: Quotation Item,Total Independent Price,Total unabhängiger Preis
+DocType: Quotation Item,Per Unit Price,Preis pro Einheit
+DocType: Quotation Item,Unit Description,Einheitsbezeichnung
+DocType: Quotation Item,Do Not Show Discount,Zeige Rabatt nicht an
+DocType: Quotation Item,Variable Price,Variabler Preis
+DocType: Sales Order Item,Total Independent Price,Total unabhängiger Preis
+DocType: Sales Order Item,Per Unit Price,Preis pro Einheit
+DocType: Sales Order Item,Unit Description,Einheitsbezeichnung
+DocType: Sales Order Item,Do Not Show Discount,Zeige Rabatt nicht an
+DocType: Sales Order Item,Variable Price,Variabler Preis
+DocType: Sales Order,Closing Text Template,Abschlusstext Vorlage
+DocType: Sales Order,Special Discounts,Spezialrabatte
+DocType: Sales Order,Transfer Discounts,Rabatte Übertragen
+DocType: Sales Order,Calc Totals,Totale berechnen
+DocType: Sales Invoice Item,Total Independent Price,Total unabhängiger Preis
+DocType: Sales Invoice Item,Per Unit Price,Preis pro Einheit
+DocType: Sales Invoice Item,Unit Description,Einheitsbezeichnung
+DocType: Sales Invoice Item,Do Not Show Discount,Zeige Rabatt nicht an
+DocType: Sales Invoice Item,Variable Price,Variabler Preis
+DocType: Sales Invoice,Closing Text Template,Abschlusstext Vorlage
+DocType: Sales Invoice,Special Discounts,Spezialrabatte
+DocType: Sales Invoice,Transfer Discounts,Rabatte Übertragen
+DocType: Sales Invoice,Calc Totals,Totale berechnen
