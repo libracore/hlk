@@ -80,42 +80,44 @@ def transfer_structur_organisation_discounts(dt, dn):
 					if structur_element.discount_in_percent > 0:
 						for item in document.items:
 							if item.hlk_element == structur_element.main_element:
-								if not item.variable_price:
-									if item.margin_type not in ['Percentage', 'Amount']:
-										item.discount_percentage = structur_element.discount_in_percent
-										item.discount_amount = (item.price_list_rate / 100) * structur_element.discount_in_percent
-										item.rate = item.rate - item.discount_amount
-										item.net_rate = item.rate
-										item.amount = item.rate * item.qty
-										item.net_amount = item.amount
-									else:
-										item.discount_percentage = structur_element.discount_in_percent
-										item.discount_amount = (item.rate_with_margin / 100) * structur_element.discount_in_percent
-									if structur_element.show_discount:
-										item.do_not_show_discount = 0
-									else:
-										item.do_not_show_discount = 1
+								if not item.total_independent_price:
+									if not item.variable_price:
+										if item.margin_type not in ['Percentage', 'Amount']:
+											item.discount_percentage = structur_element.discount_in_percent
+											item.discount_amount = (item.price_list_rate / 100) * structur_element.discount_in_percent
+											item.rate = item.rate - item.discount_amount
+											item.net_rate = item.rate
+											item.amount = item.rate * item.qty
+											item.net_amount = item.amount
+										else:
+											item.discount_percentage = structur_element.discount_in_percent
+											item.discount_amount = (item.rate_with_margin / 100) * structur_element.discount_in_percent
+										if structur_element.show_discount:
+											item.do_not_show_discount = 0
+										else:
+											item.do_not_show_discount = 1
 				else:
 					structur_element.discount_in_percent = 0.00
 					structur_element.show_discount = 1
 					for item in document.items:
 						if item.hlk_element == structur_element.main_element:
-							if not item.variable_price:
-								if not item.do_not_show_discount:
-									if item.margin_type not in ['Percentage', 'Amount']:
-										item.discount_percentage = 0.00
-										item.discount_amount = 0.00
-										item.rate = item.price_list_rate
-										item.net_rate = item.rate
-										item.amount = item.rate * item.qty
-										item.net_amount = item.amount
-									else:
-										item.discount_percentage = 0.00
-										item.discount_amount = 0.00
-										item.rate = item.rate_with_margin
-										item.net_rate = item.rate
-										item.amount = item.rate_with_margin * item.qty
-										item.net_amount = item.amount
+							if not item.total_independent_price:
+								if not item.variable_price:
+									if not item.do_not_show_discount:
+										if item.margin_type not in ['Percentage', 'Amount']:
+											item.discount_percentage = 0.00
+											item.discount_amount = 0.00
+											item.rate = item.price_list_rate
+											item.net_rate = item.rate
+											item.amount = item.rate * item.qty
+											item.net_amount = item.amount
+										else:
+											item.discount_percentage = 0.00
+											item.discount_amount = 0.00
+											item.rate = item.rate_with_margin
+											item.net_rate = item.rate
+											item.amount = item.rate_with_margin * item.qty
+											item.net_amount = item.amount
 	document.save()
 	
 @frappe.whitelist()
