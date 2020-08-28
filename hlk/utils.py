@@ -276,3 +276,8 @@ def set_amount_to_bill(record, element, value):
 @frappe.whitelist()
 def get_item_group_for_structur_element_filter():
 	return frappe.db.get_single_value('HLK Settings', 'structur_element_filter')
+	
+@frappe.whitelist()
+def fetch_hlk_structur_organisation_table(template):
+	template = frappe.get_doc("HLK Structur Organisation Template", template)
+	return template.hlk_structur_organisation

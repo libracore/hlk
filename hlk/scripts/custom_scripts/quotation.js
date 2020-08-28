@@ -88,8 +88,39 @@ frappe.ui.form.on('Quotation', {
 				}
 			}, __("HLK Tools"));
 		}
+	},
+	hlk_structur_organisation_template: function(frm) {
+		if (cur_frm.doc.hlk_structur_organisation_template) {
+			if (!cur_frm.doc.hlk_structur_organisation) {
+				frappe.call({
+					"method": "hlk.utils.fetch_hlk_structur_organisation_table",
+					"args": {
+						'template': cur_frm.doc.hlk_structur_organisation_template
+					},
+					"async": false,
+					"callback": function(response) {
+						if (response.message) {
+							update_hlk_structur_organisation_rows(frm, response.message);
+						}
+					}
+				});
+			}
+		}
 	}
 })
+
+function update_hlk_structur_organisation_rows(frm, data) {
+	for (var i = 0; i < data.length; i++) {
+		var child = cur_frm.add_child('hlk_structur_organisation');
+		var entry = data[i];
+		for (var key in entry) {
+			if ((key !== 'name') && (key !== 'idx') && (key !== 'creation') && (key !== 'docstatus') && (key !== 'doctype') && (key !== 'modified') && (key !== 'modified_by') && (key !== 'owner') && (key !== 'parent') && (key !== 'parentfield') && (key !== 'parenttype')) {
+				frappe.model.set_value(child.doctype, child.name, key, entry[key]);
+			}
+		}
+		cur_frm.refresh_field('hlk_structur_organisation');
+	}
+}
 
 function validate_hlk_element_allocation(frm) {
 	frappe.call({

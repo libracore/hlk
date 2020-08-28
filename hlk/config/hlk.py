@@ -18,6 +18,12 @@ def get_data():
 					"name": "HLK Text Template",
 					"label": _("HLK Text Template"),
 					"description": _("HLK Text Template")
+				},
+				{
+					"type": "doctype",
+					"name": "HLK Structur Organisation Template",
+					"label": _("HLK Structur Organisation Template"),
+					"description": _("HLK Structur Organisation Template")
 				}
 			]
 		},

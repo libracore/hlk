@@ -12,7 +12,9 @@
   "discounting",
   "discount_in_percent",
   "show_discount",
-  "page_break"
+  "page_break",
+  "show_total_after_this_position",
+  "show_main_total_after_this_position"
  ],
  "fields": [
   {
@@ -21,7 +23,8 @@
    "in_list_view": 1,
    "label": "Element",
    "options": "Item",
-   "reqd": 1
+   "reqd": 1,
+   "search_index": 1
   },
   {
    "fetch_from": "element.eltern_element",
@@ -78,10 +81,22 @@
    "fieldtype": "Percent",
    "label": "Charged",
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "show_total_after_this_position",
+   "fieldtype": "Check",
+   "label": "Show Total After This Position"
+  },
+  {
+   "default": "0",
+   "fieldname": "show_main_total_after_this_position",
+   "fieldtype": "Check",
+   "label": "Show Main Total After This Position"
   }
  ],
  "istable": 1,
- "modified": "2020-08-26 13:57:55.977776",
+ "modified": "2020-08-27 17:05:39.480651",
  "modified_by": "Administrator",
  "module": "HLK",
  "name": "HLK Structur Organisation",
