@@ -17,6 +17,8 @@ DocType: Quotation,Please save Document first,Bitte speichern Sie das Dokument z
 DocType: Quotation,Please remove table HLK Structur Organisation first,Bitte entfernen Sie zuerst die Tabelle HLK Struktur Organisation
 DocType: Quotation,Closing Text Template,Abschlusstext Vorlage
 DocType: Quotation,Special Discounts,Spezialrabatte
+DocType: Quotation,Please wait,Bitte warten
+DocType: Quotation,Process complete,Prozess abgeschlossen
 DocType: HLK Structur Organisation,Parent Element,Eltern Element
 DocType: HLK Structur Organisation,Charged,Verrechnet
 DocType: HLK Structur Organisation,Discounting,Rabattierung
@@ -24,6 +26,8 @@ DocType: HLK Structur Organisation,Show Total After This Position,Zeige Total na
 DocType: HLK Structur Organisation,Show Main Total After This Position,Zeige Gesamttotal nach dieser Position
 DocType: HLK Structur Organisation,Discount in Percent,Rabatt in Prozent
 DocType: HLK Structur Organisation,Show Discount,Zeige Rabatt an
+DocType: HLK Structur Organisation,Page Break Before Element,Seitenumbruch vor diesem Element
+DocType: HLK Structur Organisation,Page Break After Element,Seitenumbruch nach diesem Element
 DocType: Quotation Item,Total Independent Price,Total unabhängiger Preis
 DocType: Quotation Item,Per Unit Price,Preis pro Einheit
 DocType: Quotation Item,Unit Description,Einheitsbezeichnung
@@ -38,6 +42,8 @@ DocType: Sales Order,Closing Text Template,Abschlusstext Vorlage
 DocType: Sales Order,Special Discounts,Spezialrabatte
 DocType: Sales Order,Transfer Discounts,Rabatte Übertragen
 DocType: Sales Order,Calc Totals,Totale berechnen
+DocType: Sales Order,Please wait,Bitte warten
+DocType: Sales Order,Process complete,Prozess abgeschlossen
 DocType: Sales Invoice Item,Total Independent Price,Total unabhängiger Preis
 DocType: Sales Invoice Item,Per Unit Price,Preis pro Einheit
 DocType: Sales Invoice Item,Unit Description,Einheitsbezeichnung
@@ -47,3 +53,5 @@ DocType: Sales Invoice,Closing Text Template,Abschlusstext Vorlage
 DocType: Sales Invoice,Special Discounts,Spezialrabatte
 DocType: Sales Invoice,Transfer Discounts,Rabatte Übertragen
 DocType: Sales Invoice,Calc Totals,Totale berechnen
+DocType: Sales Invoice,Please wait,Bitte warten
+DocType: Sales Invoice,Process complete,Prozess abgeschlossen

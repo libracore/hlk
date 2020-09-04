@@ -26,8 +26,7 @@ def calc_structur_organisation_totals(dt, dn):
 	for structur_element in document.hlk_structur_organisation:
 		if not structur_element.parent_element in parent_elements:
 			if not structur_element.main_element in sub_parent_elements:
-				# without items with 'variable_price'
-				structur_element.total = frappe.db.sql("""SELECT SUM(`amount`) FROM `tab{dt} Item` WHERE `hlk_element` = '{hlk_element}' AND `parent` = '{dn}' AND `variable_price` = 0""".format(dt=dt, hlk_element=structur_element.main_element, dn=dn), as_list=True)[0][0]
+				structur_element.total = flt(frappe.db.sql("""SELECT SUM(`amount`) FROM `tab{dt} Item` WHERE `hlk_element` = '{hlk_element}' AND `parent` = '{dn}'""".format(dt=dt, hlk_element=structur_element.main_element, dn=dn), as_list=True)[0][0])
 				if dt != 'Sales Invoice':
 					structur_element.net_total = structur_element.total
 				if dt in ['Quotation', 'Sales Order']:
@@ -85,13 +84,14 @@ def transfer_structur_organisation_discounts(dt, dn):
 										if item.margin_type not in ['Percentage', 'Amount']:
 											item.discount_percentage = structur_element.discount_in_percent
 											item.discount_amount = (item.price_list_rate / 100) * structur_element.discount_in_percent
-											item.rate = item.rate - item.discount_amount
+											item.rate = item.price_list_rate - item.discount_amount
 											item.net_rate = item.rate
 											item.amount = item.rate * item.qty
 											item.net_amount = item.amount
 										else:
 											item.discount_percentage = structur_element.discount_in_percent
 											item.discount_amount = (item.rate_with_margin / 100) * structur_element.discount_in_percent
+											item.rate = item.rate_with_margin - item.discount_amount
 										if structur_element.show_discount:
 											item.do_not_show_discount = 0
 										else:
@@ -103,21 +103,22 @@ def transfer_structur_organisation_discounts(dt, dn):
 						if item.hlk_element == structur_element.main_element:
 							if not item.total_independent_price:
 								if not item.variable_price:
-									if not item.do_not_show_discount:
-										if item.margin_type not in ['Percentage', 'Amount']:
-											item.discount_percentage = 0.00
-											item.discount_amount = 0.00
-											item.rate = item.price_list_rate
-											item.net_rate = item.rate
-											item.amount = item.rate * item.qty
-											item.net_amount = item.amount
-										else:
-											item.discount_percentage = 0.00
-											item.discount_amount = 0.00
-											item.rate = item.rate_with_margin
-											item.net_rate = item.rate
-											item.amount = item.rate_with_margin * item.qty
-											item.net_amount = item.amount
+									if item.margin_type not in ['Percentage', 'Amount']:
+										item.discount_percentage = 0.00
+										item.discount_amount = 0.00
+										item.rate = item.price_list_rate
+										item.net_rate = item.rate
+										item.amount = item.rate * item.qty
+										item.net_amount = item.amount
+										item.do_not_show_discount = 0
+									else:
+										item.discount_percentage = 0.00
+										item.discount_amount = 0.00
+										item.rate = item.rate_with_margin
+										item.net_rate = item.rate
+										item.amount = item.rate_with_margin * item.qty
+										item.net_amount = item.amount
+										item.do_not_show_discount = 0
 	document.save()
 	
 @frappe.whitelist()
@@ -165,7 +166,10 @@ def make_sales_invoice(source_name, target_doc=None, ignore_permissions=False):
 	def update_item(source, target, source_parent):
 		target.amount = source.amount_to_bill_now #flt(source.amount) - flt(source.billed_amt)
 		target.base_amount = target.amount * flt(source_parent.conversion_rate)
-		target.qty = target.amount / flt(source.rate) if (source.rate and source.amount_to_bill_now) else source.qty - source.returned_qty
+		if source.amount_to_bill_now > 0:
+			target.qty = target.amount / flt(source.rate) if (source.rate and source.amount_to_bill_now) else source.qty - source.returned_qty
+		else:
+			target.qty = 0
 
 		if source_parent.project:
 			target.cost_center = frappe.db.get_value("Project", source_parent.project, "cost_center")

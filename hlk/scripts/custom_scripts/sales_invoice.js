@@ -65,24 +65,50 @@ frappe.ui.form.on('Sales Invoice', {
 		};
 		
 		if (!frm.doc.__islocal && cur_frm.doc.docstatus != '1') {
-			frm.add_custom_button(__("Transfer Discounts"), function() {
-				if (cur_frm.is_dirty()) {
-					frappe.msgprint(__("Please save Document first."));
-				} else {
-					transfer_structur_organisation_discounts(frm);
-				}
-			}, __("HLK Tools"));
-			
-			frm.add_custom_button(__("Calc Totals"), function() {
-				if (cur_frm.is_dirty()) {
-					frappe.msgprint(__("Please save Document first."));
-				} else {
-					calc_structur_organisation_totals(frm);
-				}
+			if (!cur_frm.custom_buttons["Transfer Discounts"]) {
+				frm.add_custom_button(__("Transfer Discounts"), function() {
+					if (cur_frm.is_dirty()) {
+						frappe.msgprint(__("Please save Document first"));
+					} else {
+						frappe.msgprint(__("Please wait"));
+						transfer_structur_organisation_discounts(frm);
+					}
+				}, __("HLK Tools"));
+			}
+			if (!cur_frm.custom_buttons["Calc Totals"]) {
+				frm.add_custom_button(__("Calc Totals"), function() {
+					if (cur_frm.is_dirty()) {
+						frappe.msgprint(__("Please save Document first"));
+					} else {
+						frappe.msgprint(__("Please wait"));
+						calc_structur_organisation_totals(frm);
+					}
+				}, __("HLK Tools"));
+			}
+		}
+	},
+	onload(frm) {
+		if (frm.doc.__islocal) {
+			frm.add_custom_button(__("Remove Zero Positions"), function() {
+				remove_zero_positions(frm);
 			}, __("HLK Tools"));
 		}
 	}
 })
+
+
+function remove_zero_positions(frm) {
+		// remove all zero qty rows
+		var tbl = cur_frm.doc.items || [];
+		var i = tbl.length;
+		while (i--)
+		{
+			if (cur_frm.get_field("items").grid.grid_rows[i].doc.qty <= 0) {
+				cur_frm.get_field("items").grid.grid_rows[i].remove();
+			}
+		}
+}
+
 
 function validate_hlk_element_allocation(frm) {
 	frappe.call({
@@ -111,6 +137,7 @@ function calc_structur_organisation_totals(frm) {
 			"async": false,
 			"callback": function(response) {
 				cur_frm.reload_doc();
+				frappe.msgprint(__("Process complete"));
 			}
 		});
 	}

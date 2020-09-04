@@ -12,7 +12,8 @@
   "discounting",
   "discount_in_percent",
   "show_discount",
-  "page_break",
+  "page_break_before",
+  "page_break_after",
   "show_total_after_this_position",
   "show_main_total_after_this_position"
  ],
@@ -64,12 +65,6 @@
    "label": "Show Discount"
   },
   {
-   "default": "0",
-   "fieldname": "page_break",
-   "fieldtype": "Check",
-   "label": "Seitenumbruch"
-  },
-  {
    "fieldname": "net_total",
    "fieldtype": "Currency",
    "label": "Net total",
@@ -93,10 +88,22 @@
    "fieldname": "show_main_total_after_this_position",
    "fieldtype": "Check",
    "label": "Show Main Total After This Position"
+  },
+  {
+   "default": "0",
+   "fieldname": "page_break_before",
+   "fieldtype": "Check",
+   "label": "Page Breake Before Element"
+  },
+  {
+   "default": "0",
+   "fieldname": "page_break_after",
+   "fieldtype": "Check",
+   "label": "Page Breake After Element"
   }
  ],
  "istable": 1,
- "modified": "2020-08-27 17:05:39.480651",
+ "modified": "2020-09-03 12:53:42.464456",
  "modified_by": "Administrator",
  "module": "HLK",
  "name": "HLK Structur Organisation",

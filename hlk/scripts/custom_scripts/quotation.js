@@ -68,25 +68,31 @@ frappe.ui.form.on('Quotation', {
 		};
 		
 		if (!frm.doc.__islocal && cur_frm.doc.docstatus != '1') {
-			frm.add_custom_button(__("Change Customer w/o impact on price"), function() {
-				change_customer(frm);
-			});
-			
-			frm.add_custom_button(__("Transfer Discounts"), function() {
-				if (cur_frm.is_dirty()) {
-					frappe.msgprint(__("Please save Document first"));
-				} else {
-					transfer_structur_organisation_discounts(frm);
-				}
-			}, __("HLK Tools"));
-			
-			frm.add_custom_button(__("Calc Totals"), function() {
-				if (cur_frm.is_dirty()) {
-					frappe.msgprint(__("Please save Document first"));
-				} else {
-					calc_structur_organisation_totals(frm);
-				}
-			}, __("HLK Tools"));
+			if (!cur_frm.custom_buttons["Change Customer without impact on price"]) {
+				frm.add_custom_button(__("Change Customer without impact on price"), function() {
+					change_customer(frm);
+				});
+			}
+			if (!cur_frm.custom_buttons["Transfer Discounts"]) {
+				frm.add_custom_button(__("Transfer Discounts"), function() {
+					if (cur_frm.is_dirty()) {
+						frappe.msgprint(__("Please save Document first"));
+					} else {
+						frappe.msgprint(__("Please wait"));
+						transfer_structur_organisation_discounts(frm);
+					}
+				}, __("HLK Tools"));
+			}
+			if (!cur_frm.custom_buttons["Calc Totals"]) {
+				frm.add_custom_button(__("Calc Totals"), function() {
+					if (cur_frm.is_dirty()) {
+						frappe.msgprint(__("Please save Document first"));
+					} else {
+						frappe.msgprint(__("Please wait"));
+						calc_structur_organisation_totals(frm);
+					}
+				}, __("HLK Tools"));
+			}
 		}
 	},
 	hlk_structur_organisation_template: function(frm) {
@@ -152,6 +158,7 @@ function calc_structur_organisation_totals(frm) {
 			"async": false,
 			"callback": function(response) {
 				cur_frm.reload_doc();
+				frappe.msgprint(__("Process complete"));
 			}
 		});
 	}
