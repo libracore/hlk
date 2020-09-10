@@ -5,7 +5,10 @@
  "engine": "InnoDB",
  "field_order": [
   "description",
-  "discount"
+  "discount_type",
+  "percentage",
+  "discount",
+  "is_cumulative"
  ],
  "fields": [
   {
@@ -16,15 +19,38 @@
    "reqd": 1
   },
   {
+   "default": "0",
    "fieldname": "discount",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "Discount",
+   "label": "Discount"
+  },
+  {
+   "fieldname": "discount_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Discount Type",
+   "options": "Percentage\nAmount",
    "reqd": 1
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.discount_type=='Percentage'",
+   "fieldname": "percentage",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Percentage"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_cumulative",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Is Cumulativ"
   }
  ],
  "istable": 1,
- "modified": "2020-08-25 12:38:08.533367",
+ "modified": "2020-09-10 12:26:50.540696",
  "modified_by": "Administrator",
  "module": "HLK",
  "name": "HLK Discounts",

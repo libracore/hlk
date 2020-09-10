@@ -1,17 +1,5 @@
 frappe.ui.form.on('Sales Invoice', {
 	validate(frm) {
-		if (cur_frm.doc.special_discounts) {
-		    var discounts = cur_frm.doc.special_discounts;
-			var total_discounts = 0;
-			discounts.forEach(function(entry) {
-				total_discounts += entry.discount;
-			});
-			if (!cur_frm.doc.apply_discount_on) {
-				cur_frm.set_value('apply_discount_on', 'Net Total');
-			}
-			cur_frm.set_value('discount_amount', total_discounts);
-		}
-		
 		validate_hlk_element_allocation(frm);
 	},
 	refresh(frm) {
@@ -70,7 +58,6 @@ frappe.ui.form.on('Sales Invoice', {
 					if (cur_frm.is_dirty()) {
 						frappe.msgprint(__("Please save Document first"));
 					} else {
-						frappe.msgprint(__("Please wait"));
 						transfer_structur_organisation_discounts(frm);
 					}
 				}, __("HLK Tools"));
@@ -80,8 +67,16 @@ frappe.ui.form.on('Sales Invoice', {
 					if (cur_frm.is_dirty()) {
 						frappe.msgprint(__("Please save Document first"));
 					} else {
-						frappe.msgprint(__("Please wait"));
 						calc_structur_organisation_totals(frm);
+					}
+				}, __("HLK Tools"));
+			}
+			if (!cur_frm.custom_buttons["Recalc Special Discounts"]) {
+				frm.add_custom_button(__("Recalc Special Discounts"), function() {
+					if (cur_frm.is_dirty()) {
+						frappe.msgprint(__("Please save Document first"));
+					} else {
+						recalc_special_discounts(frm);
 					}
 				}, __("HLK Tools"));
 			}
@@ -96,6 +91,37 @@ frappe.ui.form.on('Sales Invoice', {
 	}
 })
 
+function recalc_special_discounts(frm) {
+	if (cur_frm.doc.special_discounts) {
+		var discounts = cur_frm.doc.special_discounts;
+		var total_discounts = 0;
+		discounts.forEach(function(entry) {
+			if (entry.discount_type == 'Percentage') {
+				var percentage_amount = 0;
+				if (entry.is_cumulative) {
+					percentage_amount = (((cur_frm.doc.total - total_discounts) / 100) * entry.percentage);
+				} else {
+					percentage_amount = ((cur_frm.doc.total / 100) * entry.percentage);
+				}
+				total_discounts += percentage_amount;
+				entry.discount = percentage_amount;
+			} else {
+				var main_structur_elements = cur_frm.doc.hlk_structur_organisation;
+				main_structur_elements.forEach(function(hlk_entry) {
+					if (!hlk_entry.parent_element) {
+						var percentage = ((100 / hlk_entry.net_total) * hlk_entry.total);
+						var percentage_amount = 0;
+						percentage_amount = ((entry.discount / 100) * percentage);
+						total_discounts += percentage_amount;
+						entry.discount = percentage_amount;
+					}
+				});
+			}
+		});
+		cur_frm.set_value('apply_discount_on', 'Net Total');
+		cur_frm.set_value('discount_amount', total_discounts);
+	}
+}
 
 function remove_zero_positions(frm) {
 		// remove all zero qty rows
@@ -137,7 +163,6 @@ function calc_structur_organisation_totals(frm) {
 			"async": false,
 			"callback": function(response) {
 				cur_frm.reload_doc();
-				frappe.msgprint(__("Process complete"));
 			}
 		});
 	}

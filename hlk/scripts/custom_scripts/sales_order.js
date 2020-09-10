@@ -1,17 +1,5 @@
 frappe.ui.form.on('Sales Order', {
 	validate(frm) {
-		if (cur_frm.doc.special_discounts) {
-		    var discounts = cur_frm.doc.special_discounts;
-			var total_discounts = 0;
-			discounts.forEach(function(entry) {
-				total_discounts += entry.discount;
-			});
-			if (!cur_frm.doc.apply_discount_on) {
-				cur_frm.set_value('apply_discount_on', 'Net Total');
-			}
-			cur_frm.set_value('discount_amount', total_discounts);
-		}
-		
 		validate_hlk_element_allocation(frm);
 	},
 	refresh(frm) {
@@ -90,6 +78,15 @@ frappe.ui.form.on('Sales Order', {
 					}
 				}, __("HLK Tools"));
 			}
+			if (!cur_frm.custom_buttons["Transfer Special Discounts"]) {
+				frm.add_custom_button(__("Transfer Special Discounts"), function() {
+					if (cur_frm.is_dirty()) {
+						frappe.msgprint(__("Please save Document first"));
+					} else {
+						transfer_special_discounts(frm);
+					}
+				}, __("HLK Tools"));
+			}
 		}
 		
 		if (!frm.doc.__islocal && cur_frm.doc.docstatus == '1') {
@@ -116,6 +113,29 @@ frappe.ui.form.on('Sales Order', {
 		});
 	}
 })
+
+function transfer_special_discounts(frm) {
+	if (cur_frm.doc.special_discounts) {
+		var discounts = cur_frm.doc.special_discounts;
+		var total_discounts = 0;
+		discounts.forEach(function(entry) {
+			if (entry.discount_type == 'Percentage') {
+				var percentage_amount = 0;
+				if (entry.is_cumulative) {
+					percentage_amount = (((cur_frm.doc.total - total_discounts) / 100) * entry.percentage);
+				} else {
+					percentage_amount = ((cur_frm.doc.total / 100) * entry.percentage);
+				}
+				total_discounts += percentage_amount;
+				entry.discount = percentage_amount;
+			} else {
+				total_discounts += entry.discount;
+			}
+		});
+		cur_frm.set_value('apply_discount_on', 'Net Total');
+		cur_frm.set_value('discount_amount', total_discounts);
+	}
+}
 
 function erstelle_teilrechnung_pop_up(frm) {
 	var struktur_elemente = get_all_strukturelemente(frm);

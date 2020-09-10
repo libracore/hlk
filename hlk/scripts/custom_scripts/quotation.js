@@ -1,21 +1,7 @@
 frappe.ui.form.on('Quotation', {
 	validate(frm) {
-		if (cur_frm.doc.special_discounts) {
-		    var discounts = cur_frm.doc.special_discounts;
-			var total_discounts = 0;
-			discounts.forEach(function(entry) {
-				total_discounts += entry.discount;
-			});
-			if (!cur_frm.doc.apply_discount_on) {
-				cur_frm.set_value('apply_discount_on', 'Net Total');
-			}
-			cur_frm.set_value('discount_amount', total_discounts);
-		}
-		
 		calc_valid_to_date(frm);
-		
 		validate_hlk_element_allocation(frm);
-		
 	},
 	refresh(frm) {
 		frappe.call({
@@ -78,7 +64,6 @@ frappe.ui.form.on('Quotation', {
 					if (cur_frm.is_dirty()) {
 						frappe.msgprint(__("Please save Document first"));
 					} else {
-						frappe.msgprint(__("Please wait"));
 						transfer_structur_organisation_discounts(frm);
 					}
 				}, __("HLK Tools"));
@@ -88,8 +73,16 @@ frappe.ui.form.on('Quotation', {
 					if (cur_frm.is_dirty()) {
 						frappe.msgprint(__("Please save Document first"));
 					} else {
-						frappe.msgprint(__("Please wait"));
 						calc_structur_organisation_totals(frm);
+					}
+				}, __("HLK Tools"));
+			}
+			if (!cur_frm.custom_buttons["Transfer Special Discounts"]) {
+				frm.add_custom_button(__("Transfer Special Discounts"), function() {
+					if (cur_frm.is_dirty()) {
+						frappe.msgprint(__("Please save Document first"));
+					} else {
+						transfer_special_discounts(frm);
 					}
 				}, __("HLK Tools"));
 			}
@@ -117,6 +110,29 @@ frappe.ui.form.on('Quotation', {
 		}
 	}
 })
+
+function transfer_special_discounts(frm) {
+	if (cur_frm.doc.special_discounts) {
+		var discounts = cur_frm.doc.special_discounts;
+		var total_discounts = 0;
+		discounts.forEach(function(entry) {
+			if (entry.discount_type == 'Percentage') {
+				var percentage_amount = 0;
+				if (entry.is_cumulative) {
+					percentage_amount = (((cur_frm.doc.total - total_discounts) / 100) * entry.percentage);
+				} else {
+					percentage_amount = ((cur_frm.doc.total / 100) * entry.percentage);
+				}
+				total_discounts += percentage_amount;
+				entry.discount = percentage_amount;
+			} else {
+				total_discounts += entry.discount;
+			}
+		});
+		cur_frm.set_value('apply_discount_on', 'Net Total');
+		cur_frm.set_value('discount_amount', total_discounts);
+	}
+}
 
 function update_hlk_structur_organisation_rows(frm, data) {
 	for (var i = 0; i < data.length; i++) {
@@ -158,7 +174,6 @@ function calc_structur_organisation_totals(frm) {
 			"async": false,
 			"callback": function(response) {
 				cur_frm.reload_doc();
-				frappe.msgprint(__("Process complete"));
 			}
 		});
 	}
