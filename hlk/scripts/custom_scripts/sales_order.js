@@ -53,13 +53,13 @@ frappe.ui.form.on('Sales Order', {
 		};
 		
 		if (!frm.doc.__islocal && cur_frm.doc.docstatus != '1') {
-			if (!cur_frm.custom_buttons["Change Customer without impact on price"]) {
+			if (!cur_frm.custom_buttons[__("Change Customer without impact on price")]) {
 				frm.add_custom_button(__("Change Customer without impact on price"), function() {
 					change_customer(frm);
 				});
 			}
-			if (!cur_frm.custom_buttons["Transfer Discounts"]) {
-				frm.add_custom_button(__("Transfer Discounts"), function() {
+			if (!cur_frm.custom_buttons[__("Transfer HLK Discounts")]) {
+				frm.add_custom_button(__("Transfer HLK Discounts"), function() {
 					if (cur_frm.is_dirty()) {
 						frappe.msgprint(__("Please save Document first"));
 					} else {
@@ -68,8 +68,8 @@ frappe.ui.form.on('Sales Order', {
 					}
 				}, __("HLK Tools"));
 			}
-			if (!cur_frm.custom_buttons["Calc Totals"]) {
-				frm.add_custom_button(__("Calc Totals"), function() {
+			if (!cur_frm.custom_buttons[__("Calc HLK Totals")]) {
+				frm.add_custom_button(__("Calc HLK Totals"), function() {
 					if (cur_frm.is_dirty()) {
 						frappe.msgprint(__("Please save Document first"));
 					} else {
@@ -78,7 +78,7 @@ frappe.ui.form.on('Sales Order', {
 					}
 				}, __("HLK Tools"));
 			}
-			if (!cur_frm.custom_buttons["Transfer Special Discounts"]) {
+			if (!cur_frm.custom_buttons[__("Transfer Special Discounts")]) {
 				frm.add_custom_button(__("Transfer Special Discounts"), function() {
 					if (cur_frm.is_dirty()) {
 						frappe.msgprint(__("Please save Document first"));
