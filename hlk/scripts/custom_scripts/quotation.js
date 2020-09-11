@@ -90,7 +90,7 @@ frappe.ui.form.on('Quotation', {
 	},
 	hlk_structur_organisation_template: function(frm) {
 		if (cur_frm.doc.hlk_structur_organisation_template) {
-			if (!cur_frm.doc.hlk_structur_organisation) {
+			if (cur_frm.doc.hlk_structur_organisation.length < 1) {
 				frappe.call({
 					"method": "hlk.utils.fetch_hlk_structur_organisation_table",
 					"args": {
